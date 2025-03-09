@@ -1,33 +1,49 @@
-//
-//  main.swift
-//  unknowNumber
-//
-//  Created by Александр on 09.03.2025.
-//
-
 import Foundation
 
-// Создаем случайное число
-let randomNumber = Int.random(in: 1...100)
-print("Введите число от 1 до 100 и нажмите ENTER")
+// Функция для получения числа от пользователя
+func getUserNumber() -> UInt8? {
+    guard let input = readLine(), let number = UInt8(input), (1...100).contains(number) else {
+        print("Вы ввели некорректное число. Введите число от 1 до 100.")
+        return nil
+    }
+    return number
+}
 
-// Флажок победы
-var flag = false
+// Функция для проверки числа
+func checkNumber(_ userNumber: UInt8, against randomNumber: UInt8) -> Bool {
+    if userNumber < randomNumber {
+        print("Ваше число меньше загаданного.")
+    } else if userNumber > randomNumber {
+        print("Ваше число больше загаданного.")
+    } else {
+        print("Поздравляем! Вы угадали число!")
+        return true
+    }
+    return false
+}
 
-repeat {
-    // Попытка использования введенного значения
-    guard let userNumber = Int(readLine() ?? "") else {
-        print("Вы ввели некорректное число. Попробуйте снова.")
-        continue
+// Основная логика игры
+func playGame() {
+    let randomNumber = UInt8.random(in: 1...100)
+    print("Добро пожаловать в игру 'Угадай число'!")
+    print("Введите число от 1 до 100 и нажмите ENTER.")
+    
+    var attempts: UInt8 = 0
+    var isGuessed = false
+    
+    while !isGuessed {
+        attempts += 1
+        print("Попытка №\(attempts):", terminator: " ")
+        
+        guard let userNumber = getUserNumber() else {
+            continue
+        }
+        
+        isGuessed = checkNumber(userNumber, against: randomNumber)
     }
     
-    // Проверка введенного числа
-    if userNumber < randomNumber {
-        print("Вы ввели число меньше задуманного.")
-    } else if userNumber > randomNumber {
-        print("Вы ввели число больше задуманного.")
-    } else {
-        print("Вы наконец-то угадали!!!")
-        flag = true
-    }
-} while !flag
+    print("Вы угадали число за \(attempts) попыток!")
+}
+
+// Запуск игры
+playGame()
